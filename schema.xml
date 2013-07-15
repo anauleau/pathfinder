@@ -1,0 +1,164 @@
+
+      <table name="Admin">
+          CREATE TABLE `Admin` (
+            `aid` int(11) NOT NULL AUTO_INCREMENT,
+            `username` varchar(25) NOT NULL DEFAULT '',
+            `password` varchar(64) NOT NULL DEFAULT '',
+            `name` varchar(40) NOT NULL DEFAULT '',
+            `boardAccess` tinyint(1) NOT NULL DEFAULT '0',
+            `adminAccess` tinyint(1) NOT NULL DEFAULT '0',
+            `specialAccess` varchar(30) NOT NULL,
+            `calendarAccess` tinyint(1) NOT NULL DEFAULT '0',
+            `orgID` varchar(10) DEFAULT NULL,
+            `orgName` varchar(60) DEFAULT NULL,
+            `orgLink` varchar(120) DEFAULT NULL,
+            `usr_email` varchar(128) NOT NULL DEFAULT '',
+            `section` varchar(40) NOT NULL,
+            `segment` varchar(40) NOT NULL,
+            `sponsor` varchar(40) NOT NULL,
+            `region` varchar(40) NOT NULL,
+            PRIMARY KEY (`aid`)
+          ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="canoes">
+          CREATE TABLE `canoes` (
+            `CN_id` int(11) NOT NULL AUTO_INCREMENT,
+            `CN_name` varchar(25) NOT NULL,
+            `CN_nickname` varchar(40) NOT NULL,
+            `CN_type` varchar(20) NOT NULL,
+            `CN_decalnum` int(3) DEFAULT NULL COMMENT 'This is the number that is taped to the canoe.  Decal numbers can change from year to year.  The value in this field should be the most current decal number.',
+            `CN_in_service` date DEFAULT NULL,
+            `CN_donor` varchar(50) DEFAULT NULL,
+            `CN_notes` varchar(1000) DEFAULT NULL,
+            `CN_generic` tinyint(1) NOT NULL,
+            PRIMARY KEY (`CN_id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=77 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="codes">
+          CREATE TABLE `codes` (
+            `c_id` int(11) NOT NULL AUTO_INCREMENT,
+            `c_type` varchar(20) NOT NULL,
+            `c_value` varchar(20) NOT NULL,
+            `c_desc` varchar(50) NOT NULL,
+            PRIMARY KEY (`c_id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="paths">
+          CREATE TABLE `paths` (
+            `PT_id` int(11) NOT NULL AUTO_INCREMENT,
+            `PT_fromto` varchar(10) NOT NULL COMMENT 'fromid~toid, for example, &quot;354~58&quot;',
+            `PT_frid` int(11) NOT NULL,
+            `PT_toid` int(11) NOT NULL,
+            `PT_type` enum('0','1','2','3') NOT NULL DEFAULT '0' COMMENT '0=Paddling route, 1 = Trucking route, 2 = Other',
+            `PT_color` varchar(12) NOT NULL,
+            `PT_portage` float NOT NULL COMMENT 'Total portage distance in kilometers',
+            `PT_paddle` float NOT NULL COMMENT 'Total paddling distance in kilometers',
+            `PT_distance` float NOT NULL COMMENT 'Approximate distance (straight line)',
+            `PT_time` float NOT NULL COMMENT 'Time in hours',
+            `PT_track` varchar(1500) NOT NULL COMMENT 'This is a set of lat,lon pairs separated by space. On trip maps, the first and last coordinates are not used, rather the coordinates of the places are used. ',
+            PRIMARY KEY (`PT_id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=1167 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="people">
+          CREATE TABLE `people` (
+            `PE_id` int(11) NOT NULL AUTO_INCREMENT,
+            `PE_campernum` int(11) NOT NULL,
+            `PE_firstname` varchar(20) NOT NULL,
+            `PE_lastname` varchar(20) NOT NULL,
+            `PE_added` varchar(10) NOT NULL,
+            PRIMARY KEY (`PE_id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=1761 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="people_roles">
+          CREATE TABLE `people_roles` (
+            `PR_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Unique ID for person/role',
+            `PR_peid` int(11) NOT NULL COMMENT 'Person ID, points to people table',
+            `PR_year` year(4) NOT NULL COMMENT 'Year (yyyy) earliest year in which person had this role',
+            `PR_group` varchar(15) NOT NULL COMMENT 'Role (groupage abbreviations)',
+            PRIMARY KEY (`PR_id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="places">
+          CREATE TABLE `places` (
+            `PL_id` int(11) NOT NULL AUTO_INCREMENT,
+            `PL_name` varchar(450) NOT NULL,
+            `PL_lat` float DEFAULT NULL,
+            `PL_lon` float DEFAULT NULL,
+            `PL_alt` float DEFAULT NULL,
+            `PL_type` varchar(10) NOT NULL COMMENT '9=place not on normal canoe route',
+            `PL_jurisdiction` varchar(10) NOT NULL,
+            PRIMARY KEY (`PL_id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=2242 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="trips">
+          CREATE TABLE `trips` (
+            `TR_id` int(11) NOT NULL AUTO_INCREMENT,
+            `TR_year` year(4) NOT NULL,
+            `TR_num` int(11) NOT NULL,
+            `TR_name` varchar(200) NOT NULL,
+            `TR_departdate` date NOT NULL,
+            `TR_departtime` varchar(10) NOT NULL COMMENT 'Early, AM, PM, Late, ',
+            `TR_returndate` date NOT NULL,
+            `TR_returntime` varchar(10) NOT NULL COMMENT 'Early, AM, PM, Late, ',
+            `TR_permit` varchar(20) DEFAULT NULL,
+            `TR_triptext` varchar(30) DEFAULT NULL,
+            `TR_stafftext` varchar(200) DEFAULT NULL,
+            `TR_notes` varchar(2500) DEFAULT NULL,
+            `TR_admin` varchar(500) DEFAULT NULL,
+            `TR_maptype` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0=Canadian topo, 2=Google satellite',
+            PRIMARY KEY (`TR_id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=1411 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="trip_canoes">
+          CREATE TABLE `trip_canoes` (
+            `TC_id` int(11) NOT NULL AUTO_INCREMENT,
+            `TC_cnid` int(11) NOT NULL,
+            `TC_trid` int(11) NOT NULL,
+            `TC_peid` int(11) NOT NULL COMMENT 'The staff member responsible for this canoe',
+            `TC_decal` varchar(10) NOT NULL,
+            PRIMARY KEY (`TC_id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=864 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="trip_people">
+          CREATE TABLE `trip_people` (
+            `TP_id` int(11) NOT NULL AUTO_INCREMENT,
+            `TP_trid` int(11) NOT NULL,
+            `TP_peid` int(11) NOT NULL,
+            `TP_role` varchar(25) NOT NULL,
+            `tp_nickname` varchar(50) NOT NULL,
+            PRIMARY KEY (`TP_id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=8911 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="trip_routes">
+          CREATE TABLE `trip_routes` (
+            `RT_id` int(11) NOT NULL AUTO_INCREMENT,
+            `RT_trid` int(11) NOT NULL,
+            `RT_seq` float NOT NULL,
+            `RT_day` tinyint(4) DEFAULT NULL,
+            `RT_plid` int(11) NOT NULL,
+            `RT_truckto` varchar(150) DEFAULT NULL,
+            `RT_pickup` varchar(150) DEFAULT NULL,
+            `RT_camp` char(1) DEFAULT NULL,
+            `RT_latlon_override` varchar(30) NOT NULL,
+            PRIMARY KEY (`RT_id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=28491 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="x_log">
+          CREATE TABLE `x_log` (
+            `xl_idid` int(11) NOT NULL AUTO_INCREMENT,
+            `xl_usrID` int(11) NOT NULL DEFAULT '0',
+            `xl_typ` text NOT NULL,
+            `xl_timestamp` datetime DEFAULT NULL,
+            PRIMARY KEY (`xl_idid`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=1341 DEFAULT CHARSET=latin1;
+      </table>
+      <table name="x_vlog">
+          CREATE TABLE `x_vlog` (
+            `xv_id` int(11) NOT NULL AUTO_INCREMENT,
+            `xv_ip` varchar(16) NOT NULL,
+            `xv_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            `xv_page` varchar(30) NOT NULL,
+            `xv_data` varchar(100) NOT NULL,
+            PRIMARY KEY (`xv_id`)
+          ) ENGINE=MyISAM AUTO_INCREMENT=15061 DEFAULT CHARSET=latin1;
+      </table>
