@@ -1,4 +1,41 @@
 <!doctype html>
 <head>
-  <script type="text/javascript"></script>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.css" />
+  <script src="http://cdn.leafletjs.com/leaflet-0.6.2/leaflet.js"></script>
+  <script src="d3.js"></script>
+  <style>
+    #map { height: 500px; }
+  </style>
 </head>
+<body>
+
+<div id="map"></div>
+<script>
+var coords = [45.9028, -78.616]
+var map = L.map('map').setView(coords, 13);
+L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
+L.marker(coords).addTo(map)
+    .bindPopup('check it out brah<br> rivers and shit')
+    .openPopup();
+
+setTimeout(function () {
+
+  var svg = d3.select('body').append('svg')
+
+
+  svg.selectAll('.dick').data([
+    [50, 100],
+    [50, 200],
+    [75, 150, 'scale(3, 1)']
+  ]).enter().append('circle')
+  .attr('r', 50)
+  .attr('cx', function (d) { return d[0] })
+  .attr('cy', function (d) { return d[1] })
+  .attr('fill', 'brown')
+    .attr('transform', '')
+  .transition().duration(5000).ease('elastic')
+  .attr('transform', function (d) { return d[2] })
+}, 500)
+
+</script>
+</body>
