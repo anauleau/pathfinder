@@ -1,5 +1,6 @@
 import sys #imports sys module so file can be passed as arg from command line
 import xml.etree.cElementTree as etree #imports etree to parse XML
+import json
 
 # filename = sys.argv[1] #assigns second argument to filename - first is solution.py
 # schema = etree.parse('schema.xml') #sets the passed xml file as the tree element
@@ -95,4 +96,7 @@ for table in root.findall('table'):
     pathfinder['tripRoutes'][table[0].text]['pickUp'] = table[6].text
     pathfinder['tripRoutes'][table[0].text]['camp'] = table[7].text
 
-print pathfinder
+data = open('data.json', 'w')
+pathfinder = json.dumps(pathfinder)
+data.write(pathfinder)
+print('done')
